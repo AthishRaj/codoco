@@ -1,96 +1,87 @@
-// Import React hooks and libraries
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // For navigation after registration
-import axios from 'axios'; // For HTTP requests to backend
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Register = () => {
-    // State variables to store form input values and error messages
-    const [name, setName] = useState('');       // Stores entered username
-    const [email, setEmail] = useState('');     // Stores entered email
-    const [password, setPassword] = useState(''); // Stores entered password
-    const [error, setError] = useState('');     // Stores error messages (if registration fails)
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
-    const navigate = useNavigate(); // For redirecting user after successful registration
+    const navigate = useNavigate();
 
-    // Function to handle form submission
     const handleRegister = async (e) => {
-        e.preventDefault(); // Prevents page reload on form submit
-        setError('');       // Clear any old error messages before new request
-
+        e.preventDefault();
+        setError('');
         try {
-            // Send POST request to backend register API with name, email, and password
             const { data } = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
-
-            // Store token in localStorage (sent by backend after registration)
             localStorage.setItem('token', data.token);
-
-            // Redirect to login page after successful registration
             navigate('/login');
         } catch (error) {
-            // If backend returns a known error (like "email already exists")
             if (error.response && error.response.data && error.response.data.message) {
-                setError(error.response.data.message); 
+                setError(error.response.data.message);
             } else {
-                // Handle unexpected errors (like server down, network issue, etc.)
                 setError('An unexpected error occurred. Please try again later.');
             }
         }
     };
 
     return (
-        <div className="container">
-            <h2>Register</h2>
+        <div
+            className="d-flex align-items-center justify-content-center vh-100"
+            style={{
+                background: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)" // lighter pastel gradient
+            }}
+        >
+            <div className="p-5 bg-white rounded-4 shadow-lg text-center" style={{ maxWidth: "400px", width: "100%" }}>
+                <h2 className="mb-4 text-primary">Register</h2>
 
-            {/* Registration form */}
-            <form onSubmit={handleRegister}>
-                {/* Username field */}
-                <div className="mb-3">
-                    <label htmlFor="name" className="form-label">Username</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)} // Updates username state
-                        required
-                    />
-                </div>
+                <form onSubmit={handleRegister}>
+                    <div className="mb-3 text-start">
+                        <label htmlFor="name" className="form-label">Username</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                    </div>
 
-                {/* Email field */}
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email address</label>
-                    <input
-                        type="email"
-                        className="form-control"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)} // Updates email state
-                        required
-                    />
-                </div>
+                    <div className="mb-3 text-start">
+                        <label htmlFor="email" className="form-label">Email address</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
 
-                {/* Password field */}
-                <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Password</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)} // Updates password state
-                        required
-                    />
-                </div>
+                    <div className="mb-3 text-start">
+                        <label htmlFor="password" className="form-label">Password</label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
 
-                {/* Submit button */}
-                <button type="submit" className="btn btn-primary">Register</button>
-            </form>
+                    <button type="submit" className="btn btn-primary w-100 shadow-sm">Register</button>
+                </form>
 
-            {/* Show error message if registration fails */}
-            {error && <p className="text-danger mt-3">{error}</p>}
+                {error && <p className="text-danger mt-3">{error}</p>}
 
-            {/* Redirect to login if already registered */}
-            <p>Already have an account? <a href="/">Login</a></p>
+                <p className="mt-3">
+                    Already have an account? <a href="/">Login</a>
+                </p>
+            </div>
         </div>
     );
 };
