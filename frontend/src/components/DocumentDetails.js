@@ -78,91 +78,111 @@ const DocumentDetails = () => {
 
     return (
         <div
-            className="min-vh-100 py-5"
-            style={{ background: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)" }}
+  className="min-vh-100 py-5"
+  style={{ background: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)" }}
+>
+  <div className="container px-3">
+
+    {/* Success message from navigation */}
+    {message && <div className="alert alert-success mt-3">{message}</div>}
+
+    {/* Main card */}
+    <div className="p-4 p-md-5 bg-white rounded-5 shadow-lg">
+      <h2 className="mb-4 text-dark fw-bold">Document Details</h2>
+
+      {/* Title input */}
+      <div className="form-group mb-3">
+        <label htmlFor="title" className="form-label fw-semibold">Title</label>
+        <input
+          type="text"
+          id="title"
+          className="form-control rounded-pill shadow-sm px-3 py-2"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            socket.emit('documentUpdate', { documentId: id, title: e.target.value, content });
+          }}
+          placeholder="Enter document title"
+        />
+      </div>
+
+      {/* Content textarea */}
+      <div className="form-group mb-3">
+        <label htmlFor="content" className="form-label fw-semibold">Content</label>
+        <textarea
+          id="content"
+          className="form-control rounded-3 shadow-sm px-3 py-2"
+          rows="6"
+          value={content}
+          onChange={(e) => {
+            setContent(e.target.value);
+            socket.emit('documentUpdate', { documentId: id, title, content: e.target.value });
+          }}
+          placeholder="Write your content here..."
+        />
+      </div>
+
+      {/* Success message */}
+      {successMessage && <div className="alert alert-success mb-3">{successMessage}</div>}
+
+      {/* Action buttons */}
+      <div id="buttons" className="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
+        <button
+          className="btn btn-primary rounded-pill shadow-sm flex-fill"
+          style={{ transition: "all 0.3s" }}
+          onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.03)"}
+          onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
+          onClick={handleUpdate}
         >
-            <div className="container">
-                {message && <div className="alert alert-success mt-3">{message}</div>}
+          Update Document
+        </button>
+        <button
+          className="btn btn-danger rounded-pill shadow-sm flex-fill"
+          style={{ transition: "all 0.3s" }}
+          onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.03)"}
+          onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
+          onClick={handleDelete}
+        >
+          Delete Document
+        </button>
+      </div>
 
-                <div className="p-4 bg-white rounded-4 shadow-lg">
-                    <h2 className="mb-4 text-primary">Document Details</h2>
+      {/* Live Chat */}
+      <h4 className="mb-3 text-dark fw-semibold">Live Chat</h4>
+      <div className="border p-3 mb-3 rounded-3 bg-light" style={{ maxHeight: "250px", overflowY: "auto" }}>
+        {chatMessages.map((msg, idx) => (
+          <div key={idx} className="mb-2">
+            <strong>{msg.username}:</strong> {msg.message}
+            <span className="text-muted small ms-2">
+              {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
+            </span>
+          </div>
+        ))}
+      </div>
 
-                    <div className="form-group mb-3">
-                        <label htmlFor="title">Title:</label>
-                        <input
-                            type="text"
-                            id="title"
-                            className="form-control"
-                            value={title}
-                            onChange={(e) => {
-                                setTitle(e.target.value);
-                                socket.emit('documentUpdate', { documentId: id, title: e.target.value, content });
-                            }}
-                        />
-                    </div>
+      {/* Chat input */}
+      <div className="d-flex flex-column flex-md-row gap-2">
+        <input
+          type="text"
+          className="form-control rounded-pill shadow-sm px-3 py-2 flex-fill"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          placeholder="Type a message..."
+        />
+        <button
+          className="btn btn-success rounded-pill shadow-sm flex-shrink-0"
+          style={{ transition: "all 0.3s" }}
+          onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.05)"}
+          onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"}
+          onClick={handleSendMessage}
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
-                    <div className="form-group mb-3">
-                        <label htmlFor="content">Content:</label>
-                        <textarea
-                            id="content"
-                            className="form-control"
-                            rows="6"
-                            value={content}
-                            onChange={(e) => {
-                                setContent(e.target.value);
-                                socket.emit('documentUpdate', { documentId: id, title, content: e.target.value });
-                            }}
-                        />
-                    </div>
-
-                    {successMessage && <div className="alert alert-success mb-3">{successMessage}</div>}
-
-                    <div id="buttons" className="d-flex mb-4 justify-content-between">
-                        <button
-                            className="btn btn-primary shadow-sm"
-                            onClick={handleUpdate}
-                        >
-                            Update Document
-                        </button>
-                        <button
-                            className="btn btn-danger shadow-sm"
-                            onClick={handleDelete}
-                        >
-                            Delete Document
-                        </button>
-                    </div>
-
-
-
-
-
-                    <h4 className="mb-3">Live Chat</h4>
-                    <div className="border p-3 mb-3 rounded-3 bg-light" style={{ maxHeight: "250px", overflowY: "auto" }}>
-                        {chatMessages.map((msg, idx) => (
-                            <div key={idx}>
-                                <strong>{msg.username}:</strong> {msg.message}
-                                <span className="text-muted small ms-2">
-                                    {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ''}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="d-flex">
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                            placeholder="Type a message..."
-                        />
-                        <button className="btn btn-success ms-2" onClick={handleSendMessage}>
-                            Send
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     );
 };
 
