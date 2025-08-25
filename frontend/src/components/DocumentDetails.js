@@ -3,6 +3,9 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getDocumentById, updateDocument, deleteDocument } from '../services/documentService';
 import { io } from 'socket.io-client'
 import { MessageCircle, X, Save, Trash2, Maximize2, Minimize2, Download } from 'lucide-react';
+import * as docx from "docx";
+
+const { Document, Packer, Paragraph, TextRun, HeadingLevel } = docx;
 
 const DocumentDetails = () => {
     const socket = io('http://localhost:5000');
@@ -28,7 +31,8 @@ const DocumentDetails = () => {
                 setDocument(doc);
                 setTitle(doc.title);
                 setContent(doc.content);
-            } catch {
+            } catch(e) {
+                // console.log(e)
                 setError('Failed to fetch document');
             }
         };
@@ -112,7 +116,7 @@ const DocumentDetails = () => {
     const downloadAsDocx = async () => {
         try {
             // This requires docx library: npm install docx
-            const { Document, Packer, Paragraph, TextRun, HeadingLevel } = await import('docx');
+            // const { Document, Packer, Paragraph, TextRun, HeadingLevel } = await import('docx');
             
             const doc = new Document({
                 sections: [{
@@ -226,14 +230,14 @@ const DocumentDetails = () => {
                                 Download
                             </button>
                             <ul className="dropdown-menu">
-                                <li>
+                                {/* <li>
                                     <button 
                                         className="dropdown-item" 
                                         onClick={downloadAsDocx}
                                     >
                                         📄 Word Document (.docx)
                                     </button>
-                                </li>
+                                </li> */}
                                 <li>
                                     <button 
                                         className="dropdown-item" 

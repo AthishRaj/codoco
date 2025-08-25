@@ -26,11 +26,27 @@ const Register = () => {
         }
     };
 
+    const validateEmail = (value) => {
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return regex.test(value);
+    };
+
+    const handleEmailChange = (e) => {
+        const value = e.target.value;
+        setEmail(value);
+
+        if (!validateEmail(value)) {
+            setError("Please enter a valid email address");
+        } else {
+            setError("");
+        }
+    };
+
     return (
         <div
             className="d-flex align-items-center justify-content-center vh-100 px-3"
             style={{
-                background: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+                background: "linear-gradient(135deg,  #93fffaff 0%, #efacfdff  100%)"
             }}
         >
             <div
@@ -58,16 +74,17 @@ const Register = () => {
                     </div>
 
                     <div className="mb-3 text-start">
-                        <label htmlFor="email" className="form-label fw-semibold">Email address</label>
+                        <label htmlFor="email" className="form-label">Email</label>
                         <input
                             type="email"
-                            className="form-control rounded-pill shadow-sm px-3 py-2"
+                            className={`form-control rounded-pill shadow-sm px-3 py-2 form-control ${error ? "is-invalid" : ""}`}
                             id="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={handleEmailChange}
                             placeholder="Enter your email"
                             required
                         />
+                        {error && <div className="invalid-feedback">{error}</div>}
                     </div>
 
                     <div className="mb-4 text-start">

@@ -1,6 +1,8 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 
+'react-router-dom';
 
+import {LogOut} from 'lucide-react'
 const Navbar = () => {
     const navigate = useNavigate();
     const userString = localStorage.getItem('user');
@@ -14,7 +16,7 @@ const Navbar = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">
-                <Link className="navbar-brand" to="/dashboard">CoDoc</Link>
+                <Link className="fw-bold navbar-brand " to="/dashboard"><span style={{ color: '#009dffff' }}>Co</span>Doc</Link>
                 <button 
                     className="navbar-toggler" 
                     type="button" 
@@ -34,9 +36,13 @@ const Navbar = () => {
                     </ul>
                     {user ? (
                         <ul className="navbar-nav">
+                            <li 
+                            className='nav-link  text-light'> 
+                            {user.username} 
+                            </li>
                             <li className="nav-item">
-                                <button className="btn btn-link nav-link text-light" onClick={handleLogout}>
-                                    {user.username} Logout
+                                <button className="btn btn-link nav-link " onClick={handleLogout}>
+                                   <LogOut/>
                                 </button>
                             </li>
                         </ul>

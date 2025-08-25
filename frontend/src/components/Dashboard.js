@@ -42,7 +42,7 @@ const Dashboard = () => {
     return (
         <div
             className="min-vh-100 py-5"
-            style={{ background: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)" }}
+            style={{ background: "linear-gradient(135deg,  #93fffaff 0%, #efacfdff  100%)" }}
         >
             <div className="container px-3">
 
